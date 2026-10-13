@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+:root {
+  --background: #e8eef4;
+  --foreground: #0f1720;
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-strong: #ffffff;
+  --ink: #0f1720;
+  --muted: #5b6775;
+  --line: rgba(15, 23, 32, 0.1);
+  --accent: #0d7a63;
+  --accent-soft: #d5f0e8;
+  --progress: #0b5fff;
+  --progress-soft: #dce8ff;
+  --done: #334155;
+  --done-soft: #e2e8f0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-progress: var(--progress);
+  --color-progress-soft: var(--progress-soft);
+  --color-done: var(--done);
+  --color-done-soft: var(--done-soft);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), sans-serif;
+  min-height: 100vh;
+}
+
+.tf-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.tf-shell::before {
+  content: "";
+  position: absolute;
+  inset: -25% -10% auto;
+  height: 58vh;
+  background:
+    radial-gradient(ellipse 55% 50% at 12% 25%, rgba(13, 122, 99, 0.2), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 88% 8%, rgba(11, 95, 255, 0.14), transparent 70%),
+    radial-gradient(ellipse 35% 35% at 55% 0%, rgba(15, 23, 32, 0.06), transparent 70%);
+  pointer-events: none;
+  z-index: -2;
+}
+
+.tf-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(15, 23, 32, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 32, 0.04) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent 72%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.tf-glass {
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+}
+
+.tf-column-todo {
+  --col-tint: var(--accent-soft);
+  --col-ink: var(--accent);
+}
+
+.tf-column-progress {
+  --col-tint: var(--progress-soft);
+  --col-ink: var(--progress);
+}
+
+.tf-column-done {
+  --col-tint: var(--done-soft);
+  --col-ink: var(--done);
+}

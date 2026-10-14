@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import "./globals.css";
 
 const display = Syne({
@@ -21,9 +22,9 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TaskFlow — Real-time Kanban",
+  title: "TaskFlow — Enterprise Project Management",
   description:
-    "Full-stack real-time task board with Next.js, Express, MongoDB, and Socket.io",
+    "Multi-tenant real-time project management with workspaces, RBAC, and Socket.io rooms",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -32,7 +33,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

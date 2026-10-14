@@ -11,17 +11,25 @@ function getAllowedOrigins() {
     .filter(Boolean);
 }
 
-function corsOptions() {
+function isAllowedOrigin(origin) {
+  const normalized = normalizeOrigin(origin);
   const allowed = getAllowedOrigins();
 
+  if (allowed.includes(normalized)) return true;
+
+  // Vercel production + preview deployments
+  if (/^https:\/\/[\w.-]+\.vercel\.app$/.test(normalized)) return true;
+
+  return false;
+}
+
+function corsOptions() {
   return {
     origin(origin, callback) {
-      // Server-to-server / curl (no Origin header)
       if (!origin) {
         return callback(null, true);
       }
-      const normalized = normalizeOrigin(origin);
-      if (allowed.includes(normalized)) {
+      if (isAllowedOrigin(origin)) {
         return callback(null, true);
       }
       console.warn(`CORS blocked origin: ${origin}`);
@@ -31,4 +39,4 @@ function corsOptions() {
   };
 }
 
-module.exports = { getAllowedOrigins, corsOptions, normalizeOrigin };
+module.exports = { getAllowedOrigins, corsOptions, normalizeOrigin, isAllowedOrigin };

@@ -4,6 +4,7 @@ const { Server } = require('socket.io');
 const jwt = require('jsonwebtoken');
 const { createApp } = require('./app');
 const { connectDB } = require('./config/db');
+const { corsOptions } = require('./config/cors');
 const {
   initSocket,
   workspaceRoom,
@@ -25,13 +26,10 @@ async function start() {
 
   const app = createApp();
   const server = http.createServer(app);
-  const origin = process.env.CLIENT_ORIGIN || 'http://localhost:3000';
-
   const io = new Server(server, {
     cors: {
-      origin,
+      ...corsOptions(),
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-      credentials: true,
     },
   });
 

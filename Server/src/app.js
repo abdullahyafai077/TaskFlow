@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const { corsOptions } = require('./config/cors');
 const authRoutes = require('./routes/auth');
 const workspaceRoutes = require('./routes/workspaces');
 const projectRoutes = require('./routes/projects');
@@ -9,14 +10,7 @@ const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 function createApp() {
   const app = express();
-  const origin = process.env.CLIENT_ORIGIN || 'http://localhost:3000';
-
-  app.use(
-    cors({
-      origin,
-      credentials: true,
-    })
-  );
+  app.use(cors(corsOptions()));
   app.use(express.json({ limit: '1mb' }));
 
   app.get('/api/health', (req, res) => {

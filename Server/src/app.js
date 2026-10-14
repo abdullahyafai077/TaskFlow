@@ -7,6 +7,7 @@ const projectRoutes = require('./routes/projects');
 const taskRoutes = require('./routes/tasks');
 const activityRoutes = require('./routes/activity');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
+const { isDbConnected } = require('./config/db');
 
 function createApp() {
   const app = express();
@@ -14,7 +15,12 @@ function createApp() {
   app.use(express.json({ limit: '1mb' }));
 
   app.get('/api/health', (req, res) => {
-    res.json({ ok: true, service: 'taskflow-api' });
+    const db = isDbConnected();
+    res.json({
+      ok: true,
+      service: 'taskflow-api',
+      db: db ? 'connected' : 'disconnected',
+    });
   });
 
   app.use('/api/auth', authRoutes);

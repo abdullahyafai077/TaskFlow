@@ -14,15 +14,13 @@ const User = require('./models/User');
 
 async function start() {
   if (!process.env.MONGO_URI) {
-    console.error('MONGO_URI missing in .env');
+    console.error('MONGO_URI missing — set it in Render Environment');
     process.exit(1);
   }
   if (!process.env.JWT_SECRET) {
-    console.error('JWT_SECRET missing in .env');
+    console.error('JWT_SECRET missing — set it in Render Environment');
     process.exit(1);
   }
-
-  await connectDB(process.env.MONGO_URI);
 
   const app = createApp();
   const server = http.createServer(app);
@@ -96,8 +94,21 @@ async function start() {
   });
 
   const PORT = process.env.PORT || 5000;
-  server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  const HOST = '0.0.0.0';
+
+  // Listen FIRST so Render health checks pass, then connect DB
+  await new Promise((resolve) => {
+    server.listen(PORT, HOST, () => {
+      console.log(`Server running on ${HOST}:${PORT}`);
+      resolve();
+    });
+  });
+
+  connectDB(process.env.MONGO_URI).catch((err) => {
+    console.error('DB Connection Error (will retry on requests):', err.message);
+    console.error(
+      'Check: MONGO_URI in Render env, Atlas IP whitelist 0.0.0.0/0'
+    );
   });
 }
 
